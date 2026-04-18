@@ -1,0 +1,6 @@
+version: 1
+validation:
+  strategy: browser-preview
+  previewUrlPattern: n/a
+setupCommand: npm install
+specStore: git-track

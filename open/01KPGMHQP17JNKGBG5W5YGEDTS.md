@@ -4,13 +4,15 @@ id: 01KPGMHQP17JNKGBG5W5YGEDTS
 status: open
 labels:
   - spec
+assigned_to:
+  user: failingbuild2[bot]
 scope:
   ref: f0954c9b6a7f91835e1f60ac15fb0317e9fe0326
   paths: []
 created_by:
   user: unknown
 created_at: 2026-04-18T15:50:00.640Z
-updated_at: 2026-04-18T15:50:02.377Z
+updated_at: 2026-04-18T15:50:05.531Z
 pr: "2"
 branch: slop/team-init-1776527364779
 ---

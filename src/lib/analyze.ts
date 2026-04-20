@@ -14,19 +14,24 @@ export interface AffectedArea {
  * Otherwise, falls back to a heuristic-based analysis.
  */
 export async function analyzeDiff(files: PRFile[], token: string): Promise<AffectedArea[]> {
-  // Try AI analysis first
+  // Try AI analysis first. We send the GitHub token via the Authorization
+  // header (not in the JSON body) so the server can verify the caller is
+  // authenticated and short-circuit anonymous abuse of the Anthropic key.
   try {
     const res = await fetch("/api/analyze", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ files, token }),
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ files }),
     });
     if (res.ok) {
       const data = await res.json();
       return data.areas;
     }
-  } catch {
-    // Fall through to heuristic
+  } catch (e) {
+    console.error("[analyze] /api/analyze call failed, falling back to heuristic:", e);
   }
 
   return heuristicAnalysis(files);

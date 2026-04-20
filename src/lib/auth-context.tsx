@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useEffect, useState } from "react";
 import { GitHubUser } from "./github";
-import { clearStoredToken, getStoredToken, setStoredToken, validateToken } from "./auth";
+import { clearStoredToken, consumeCallbackToken, getStoredToken, setStoredToken, validateToken } from "./auth";
 
 interface AuthState {
   user: GitHubUser | null;
@@ -22,12 +22,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // Check for token from OAuth callback
-    const params = new URLSearchParams(window.location.search);
-    const callbackToken = params.get("token");
+    // OAuth callback delivers the token in the URL fragment (#token=...),
+    // which keeps it out of server logs and referrer headers.
+    const callbackToken = consumeCallbackToken();
     if (callbackToken) {
       setStoredToken(callbackToken);
-      window.history.replaceState({}, "", window.location.pathname);
     }
 
     const stored = callbackToken || getStoredToken();
